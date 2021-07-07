@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        form{
+            border: 1px solid;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .size{
+            width: 70%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid red;
+            margin-bottom: 10px;
+        }
+
+        .size h1{
+            width: 70%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .size .inputcontainer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .size .inputcontainer div{
+            margin-right: 10px;
+        }
+
+        .color{
+            width: 70%;
+            margin: 0 auto;
+            border: 1px solid red;
+            margin-bottom: 10px;
+        }
+
+        .color h1{
+            width: 70%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .color div{
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .manufacter {
+            width: 70%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .manufacter select{
+            width: 100%;
+            margin: 0 auto;
+            font-size: 20px;
+        }
+
+        .sale{
+            width: 70%;
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        button{
+            padding: 10px;
+            border-radius: 5px;
+            position: absolute;
+            left: 40%;
+        }
+
+
+    </style>
+</head>
+<body>
+    <form name="form">
+        <div class="size">
+            <div>
+                <h1>Size</h1>
+            </div>
+            <div class='inputcontainer'>
+                <div>
+                    <input type="radio" id="s" name="size" value="S">
+                    <label for="s">S</label><br>
+                </div>
+                <div>
+                    <input type="radio" id="m" name="size" value="M">
+                    <label for="m">M</label><br>
+                </div>
+                <div>
+                    <input type="radio" id="l" name="size" value="L">
+                    <label for="l">L</label>
+                </div>
+            </div>
+    </div>
+    <div class="color">
+        <h1>Color</h1>
+        <div>
+            <label class="container">1
+                <input value=1 name="color" type="checkbox">
+              </label>
+              <label class="container">2
+                <input value=2 name="color" type="checkbox">
+              </label>
+              <label class="container">3
+                <input value=3 name="color" type="checkbox">
+              </label>          
+              <label class="container">4
+                <input value=4 name="color" type="checkbox">
+              </label>
+              <label class="container">5
+                <input value=5 name="color" type="checkbox">
+              </label>
+        </div>
+    </div>
+    <div class="manufacter">
+        <h1>Manufacter</h1>
+        <select name="manufacturer" id="manufacturer" multiple>
+            <option value="aaa">aaa</option>
+            <option value="b&c">b&c</option>
+            <option value="ddd">ddd</option>
+            <option value="eee">eee</option>
+          </select>
+    </div>
+    <div class="sale">
+        <label class="container">1
+            <input name="sale" value=1 id="sale" type="checkbox">
+          </label>
+    </div>
+    </form>
+    
+
+    <script>
+     const baseUrl = 'https://example.org/filter?'
+        urlString = "https://example.org/filter?size=M&color=1&color=2&manufacturer=aaa&manufacturer=ddd",
+        url = new URL(urlString),
+        size = url.searchParams.getAll('size'),
+        color = url.searchParams.getAll('color'),
+        manufacturer = url.searchParams.getAll('manufacturer')
+        formElements = document.forms.form,
+        sizeElements = formElements.elements.size,
+        colorElements = formElements.elements.color,
+        manufacturerElements = formElements.elements.manufacturer.querySelectorAll('option');
+        let sizeStr = ''
+        let colorStr = ''
+        let manufacturerStr = ''
+        let colorArr = []
+        let manufacturerStrRes
+        let resultUrl
+
+        if(size){
+            for(let i=0; i<sizeElements.length; i++){
+                if(sizeElements[i].value==size){
+                    sizeElements[i].checked = true
+                }
+            }
+        }
+        if(color){
+            for(let i=0; i<colorElements.length; i++){
+                if(color.indexOf(colorElements[i].value) > -1){
+                    colorElements[i].checked = true
+                }
+            }
+        }
+        if(manufacturer){
+            for (let i = 0; i < manufacturerElements.length; i++) {
+                    if (manufacturer.indexOf(manufacturerElements[i].value) > -1) {
+                        manufacturerElements[i].selected = true;
+                    }
+                }    
+        }
+
+        
+        formElements.addEventListener('change', findChanges);
+
+        function findChanges(e){
+            if(e.target.name=='sale') return
+            switch(e.target.name){
+                case 'size':
+                 for (let i=0; i<sizeElements.length; i++){
+                     if(sizeElements[i].checked){
+                         sizeStr = `size=${sizeElements[i].value}&`
+                         break
+                     }
+                 }
+                 break
+                 case 'color':
+                    for (let i = 0; i < colorElements.length; i++) {
+                            if (colorElements[i].checked) {
+                               colorArr.push(colorElements[i].value)
+                            }
+                        }                        
+                        break;
+                    case 'manufacturer':                       
+                        for (let i = 0; i < manufacturerElements.length; i++) {
+                            if (manufacturerElements[i].selected) {
+                                manufacturerStr+=`manufacturer=${manufacturerElements[i].value}&`
+                            }                                                    
+                        }
+                        break
+            }
+
+                colorStr = Array.from(new Set([...colorArr])).map(color=>`color=${color}&`).join('')
+                resultUrl = baseUrl+sizeStr+colorStr+manufacturerStr
+                console.log(resultUrl.substring(0, resultUrl.length - 1))    
+         }
+         
+      
+    </script>
+</body>
+</html>
